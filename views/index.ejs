@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Pinterest Clone</title>
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Add Google Fonts for modern, blocky text -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="https://growthcurve.co/assets/img/growthcurve-logo.svg" alt="Logo">
+    </div>
+    <nav class="nav">
+      <a href="/dash" class="nav-link">Dashboard</a>
+    </nav>
+  </header>
+  <div class="url-display">
+    <span class="url-title">Current Session URL:</span>
+    <span id="url-display"></span>
+  </div>
+  <div class="container">
+    <div class="buttons">
+      <a href="/<%= galleryId %>/gallery" class="btn">View Gallery</a>
+      <button id="upload-button" class="btn">Upload</button>
+    </div>
+    <div class="drop-area" id="drop-area">
+      <p>Drag & Drop your files here</p>
+    </div>
+  </div>
+
+  <div class="modal" id="upload-modal">
+    <div class="modal-content">
+      <h1>Upload Image</h1>
+      <form id="upload-form" action="/<%= galleryId %>/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit" class="btn">Upload</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const dropArea = document.getElementById('drop-area');
+    const uploadButton = document.getElementById('upload-button');
+    const uploadModal = document.getElementById('upload-modal');
+    const form = document.getElementById('upload-form');
+    const urlDisplay = document.getElementById('url-display');
+
+    // Display the current URL
+    urlDisplay.textContent = window.location.href;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    document.body.addEventListener('dragover', () => {
+      dropArea.style.display = 'block';
+      dropArea.classList.add('dragover');
+    });
+
+    document.body.addEventListener('dragleave', () => {
+      dropArea.classList.remove('dragover');
+    });
+
+    dropArea.addEventListener('drop', (e) => {
+      dropArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+
+    uploadButton.addEventListener('click', () => {
+      uploadModal.style.display = 'flex';
+    });
+
+    uploadModal.addEventListener('click', (e) => {
+      if (e.target === uploadModal) {
+        uploadModal.style.display = 'none';
+      }
+    });
+
+    function handleFiles(files) {
+      const formData = new FormData();
+      formData.append('image', files[0]);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = `/${"<%= galleryId %>"}/gallery`;
+        } else {
+          alert('Upload failed');
+        }
+      })
+      .catch(() => {
+        alert('Upload failed');
+      });
+    }
+  </script>
+</body>
+</html>

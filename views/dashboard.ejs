@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Pinterest Clone</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      text-align: center;
+    }
+    .bookmarks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .bookmark {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .bookmark:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .bookmark a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    .add-bookmark {
+      margin-top: 20px;
+    }
+    .add-bookmark input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin: 0 5px;
+    }
+    .add-bookmark button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .add-bookmark button:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard</h1>
+    <div class="bookmarks">
+      <% for (let name in bookmarks) { %>
+        <div class="bookmark">
+          <a href="<%= bookmarks[name] %>"><%= name %></a>
+        </div>
+      <% } %>
+    </div>
+    <div class="add-bookmark">
+      <form action="/dash/add" method="post">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="link" placeholder="Link" required>
+        <button type="submit">Add Bookmark</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
